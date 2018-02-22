@@ -87,10 +87,29 @@ app.post('/signin/', function(req,res){
 		Users.login(req.body.id, req.body.pw, function(err, data){
 			
 			if(err) return res.status(500).json({error: err});
-			if(data) return res.json("hi "+data.name);
+			if(data) return res.redirect("modify.html"+"?id="+data.id);
 			
 		});
 
+});
+
+
+app.post('/update', function(req, res){
+	
+	Users.findOneAndUpdate({id:req.body.id}, 
+							{id: req.body.id,
+							pw:req.body.pw,
+							name:req.body.name,
+							email:req.body.email,
+							gender:req.body.gender,
+							loc:req.body.loc}, function(err){
+								
+								if(err) return res.status(500).json({err:err});
+								
+								return res.send("update success");
+								
+							})
+	
 });
 
 

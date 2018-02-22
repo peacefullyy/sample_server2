@@ -22,7 +22,19 @@
     <!-- <script src="../../assets/js/ie-emulation-modes-warning.js"></script> -->
 
 
-   
+	    <script>
+		function queryParser(url){
+                    if( !url ){
+                            url = window.location.search;
+                    }
+
+                    var params={};
+                    url.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str,key,value) {
+                            params[key] = value;
+                    });
+                    return params;
+            }
+    </script>
 
 		</head>
 	<br>
@@ -65,40 +77,44 @@
 		  
     <div class="container">
 
-      <form class="form-signin" action="/signup" method="post">
-        <h2 class="form-signin-heading">Please sign up</h2>
-        <label for="inputEmail" class="sr-only">ID</label>
-        <input type="text" id="inputEmail" class="form-control" placeholder="ID (required)" name="id" required autofocus>
+      <form class="form-signin" action="/update" method="post">
+        <h2 class="form-signin-heading">Log in success</h2>
+		<h2 class="form-signin-heading" id="hello"></h2>
+		<h5 class="form-signin-heading">Please update</h4>
+        <label for="inputId" class="sr-only">ID</label>
+        <input type="text" id="inputId" class="form-control" placeholder="ID (required)" name="id" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password (required)" name="pw" required>
 		
-		<label for="inputPassword" class="sr-only">name</label>
-        <input type="text" id="inputPassword" class="form-control" placeholder="Name (required)" name="name" required>
+		<label for="inputName" class="sr-only">name</label>
+        <input type="text" id="inputName" class="form-control" placeholder="Name (required)" name="name" required>
 		
-		<label for="inputPassword" class="sr-only">Email</label>
-        <input type="email" id="inputPassword" class="form-control" placeholder="Email (optional)" name="email">
+		<label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email (optional)" name="email">
 		
-		<label for="inputPassword" class="sr-only">gender</label>
+		<label for="inputGender" class="sr-only" id="g1">gender</label>
 		<input type="radio" class="form-control" placeholder="Password" name="gender", value="M" size ="10">남 
+		<label for="inputGender2" class="sr-only" id="g2">gender</label>
 		<input type="radio" class="form-control" placeholder="Password" name="gender", value="F">여
 		<br>
 		
-<select class="selectpicker" name = "loc">
-
-  <optgroup label="서식지">
-  <option></option>
-    <option>집</option>
-    <option>회사</option>
-    <option>학교</option>
-  </optgroup>
-</select>
-		
+		<label for="loc" class="sr-only">loc</label>
+		<select class="selectpicker" name = "loc" id="loc">
+			<optgroup label="서식지">
+			<option></option>
+			<option>집</option>
+			<option>회사</option>
+			<option>학교</option>
+			</optgroup>
+		</select>
 		<br>
 		<br>
 		<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
       </form>
 
-    </div> <!-- /container -->		
+    </div> <!-- /container -->		  
+
+
 		
 	<!-- 	<div class="btn-group bootstrap-select open">
 			<button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" role="button" title="Ketchup" aria-expanded="true">
@@ -177,4 +193,34 @@
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
 		
 			</body>
+			
+			<script>
+			
+			var id = queryParser().id;
+
+			
+$.ajax({
+  url: "/find/"+id,
+  success: function( result ) {
+    console.log(result);
+	$("#inputId").val(result.id);
+	$("#inputPassword").val(result.pw);
+	$("#inputName").val(result.name);
+	$("#inputEmail").val(result.email);
+
+	if(result.gender=="M") $('#g1').attr("checked", true);
+	if(result.gender=="F") $('#g2').attr("checked", true);
+
+	$("#inputloc").val(1);
+	
+	$("#hello").html("hi. ur name is "+result.name);
+	$("#inputId").prop('disabled', false);
+	
+  }
+});
+
+
+
+</script>
+			
  </html>
